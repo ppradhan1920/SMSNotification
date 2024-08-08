@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Event</title>
+  
+  <link rel="stylesheet" href="Base1.css">
+  <link rel="stylesheet" href="Addon1.css">
+  <link rel="stylesheet" href="SmsStyle.css">
+  <script src="RevisedShowPreview.js"></script>
+
+  <style>
+    #previewModal {
+      display: none;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid #ccc;
+      padding: 20px;
+      background-color: white;
+      z-index: 1000;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a class="navbar-brand brand-logo" style="margin: auto; padding: 20px; text-align: justify; color: blue;">
+      <h1>CEM</h1>
+    </a>
+  </nav>
+  <div class="container-fluid page-body-wrapper">
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="row">
+          <div class="col-12 grid-margin">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Event</h4>
+                <form class="form-sample">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      <div class="form-group">
+                        <div class="form-group has-danger">
+                          <label for="eventNumberInput">Event Number</label>
+                          <input class="form-control form-control-danger" id="eventNumberInput" placeholder="Event Number" required="" aria-invalid="true">
+                          <div id="eventNumberError" class="error" style="display:none;">Please enter a valid event number.</div> 
+                        </div>
+                      </div>
+                      </div>
+                    <div class="col-sm-12 col-md-3">
+                      <div class="form-group">
+                        <label for="smsTypeSelect">SMS Type :</label>
+                        <select class="form-control" id="smsTypeSelect" onchange="toggleFields()" >
+                          <option value="">--select</option>
+                          <option value="outage">Outage</option>
+                          <option value="emergency">Emergency</option>
+                          <option value="generator">Generator</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                      <div class="form-group">
+                        <label for="smsTypeSelect"></label>
+                        <select class="form-control" id="causeSelection">
+                          <option value="under-investigation">Aerial Cable</option>
+                          <option value="internal-fault">CCL</option>
+                          <option value="canceled-job-customer">CD</option>
+                          <option value="canceled-job-customer">Customer</option>
+                          <option value="canceled-job-customer">Customer CCL</option>
+                          <option value="canceled-job-customer">LV Cable</option>
+                          <option value="canceled-job-customer">MV Equipment</option>
+                          <option value="canceled-job-customer">Meter</option>
+                          <option value="canceled-job-customer">Meter Wire Box</option>
+                          <option value="canceled-job-customer">PH</option>
+                          <option value="canceled-job-customer">QG</option>
+                          <option value="canceled-job-customer">QG BT</option>
+                          <option value="canceled-job-customer">RMU CB Open</option>
+                          <option value="canceled-job-customer">Fuse Base</option>
+                          <option value="canceled-job-customer">Investigation</option>
+                          <!-- Add other options here -->
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="causeField">
+                      <div class="form-group">
+                        <label for="causeSelect">Cause :</label>
+                        <select class="form-control" id="causeSelect">
+                          <option value="under-investigation">Under Investigation</option>
+                          <option value="internal-fault">Internal Fault</option>
+                          <option value="canceled-job-customer">Canceled Job (Customer)</option>
+                          <!-- Add other options here -->
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Add other form fields here with appropriate IDs -->
+                    <div class="col-sm-12 col-md-4 hidden" id="customerField">
+                      <div class="form-group">
+                        <label for="customerInput">Customer:</label>
+                        <input type="text" class="form-control" id="customerInput" placeholder="Customer">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="buildingField">
+                      <div class="form-group">
+                        <label for="buildingInput">Building:</label>
+                        <input type="text" class="form-control" id="buildingInput" placeholder="Building">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="offDateTimeField">
+                      <div class="form-group">
+                        <label for="offDateTimeInput">Off Date Time:</label>
+                        <input type="datetime-local" class="form-control" id="offDateTimeInput" placeholder="Off Date Time">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="restoreDateTimeField">
+                      <div class="form-group">
+                        <label for="restoreDateTimeInput">Restore Date Time:</label>
+                        <input type="datetime-local" class="form-control" id="restoreDateTimeInput" placeholder="Restore Date Time">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="phaseField">
+                      <div class="form-group">
+                        <label for="phaseSelect">Phase:</label>
+                        <select class="form-control" id="phaseSelect">
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="repairObservationField">
+                      <div class="form-group">
+                        <label for="repairObservationInput">Repairing Observation:</label>
+                        <input type="text" class="form-control" id="repairObservationInput" placeholder="Repairing Observation">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="observationField">
+                      <div class="form-group">
+                        <label for="observationInput">Observation:</label>
+                        <input type="text" class="form-control" id="observationInput" placeholder="Observation">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="cemNetworkAffectedField">
+                      <div class="form-group">
+                        <label for="affectedNetworkInput">CEM Network Affected:</label>
+                        <input type="text" class="form-control" id="affectedNetworkInput" placeholder="CEM Network Affected">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="generatorField">
+                      <div class="form-group">
+                        <label for="generatorInput">Generator:</label>
+                        <input type="text" class="form-control" id="generatorInput" placeholder="Generator">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="powerLostField">
+                      <div class="form-group">
+                        <label for="powerLostInput">Power Lost:</label>
+                        <input type="text" class="form-control" id="powerLostInput" placeholder="Power Lost">
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 hidden" id="dateTimeField">
+                      <div class="form-group">
+                        <label for="dateTimeInput">Date and Time:</label>
+                        <input type="datetime-local" class="form-control" id="dateTimeInput" placeholder="Date and Time">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                      <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="showPreview()">Preview</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <label for="exampleInputName1">Destination:</label>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="form-group pull-right">
+                        <button type="submit" class="btn btn-primary mr-2">Save</button>
+                        <button type="submit" class="btn btn-primary mr-2">History</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                      <div class="form-group">
+                        <label for="exampleFormControlSelect2">SMS Recipient List:</label>
+                        <select class="form-control" id="exampleFormControlSelect2">
+                          <option value="">Under Investigation</option>
+                          <option value="">Internal Fault</option>
+                          <option value="">Cancel job (Customer)</option>
+                          <option value="">MCB Tripped CEM</option>
+                          <option value="">MCB Tripped (Customer)</option>
+                          <option value="">MCB Out of order (investigation)</option>
+                          <option value="">MCB out of order(CEM)</option>
+                          <option value="">MCB out of order(Customer)</option>
+                          <option value="">MCB Burnt(CEM)</option>
+                          <option value="">MCB Burnt(Customer)</option>
+                          <option value="">Fuse Blown(Investigation)</option>
+                          <option value="">Fuse blown(CEM)</option>
+                          <option value="">Fuse Blown(Customer)</option>
+                          <option value="">Fuse Based Blown(Investigation)</option>
+                          <option value="">MCB based Fuse</option>
+                          <option value="">Cable Burnt(Investigation)</option>
+                          <option value="">Cable Burnt(CEM)</option>
+                          <option value="">Cable Burnt(Customer)</option>
+                          <option value="">Cable Broke(Investigation)</option>
+                          <option value="">Cable Broke(CEM)</option>
+                          <option value="">Cable Broke(Customer)</option>
+                          <option value="">Over Loading(Investigation)</option>
+                          <option value="">Over Loading(CEM)</option>
+                          <option value="">Over Loading(Customer)</option>
+                          <option value="">Tree Fallen(Investigation)</option>
+                          <option value="">Tree Fallen(CEM)</option>
+                          <option value="">Tree Fallen(Customer)</option>
+                          <option value="">Fire Incident(Investigation)</option>
+                          <option value="">Fire Incident(CEM)</option>
+                          <option value="">Fire Incident(Customer)</option>
+                          <option value="">Bypassed(Investigation)</option>
+                          <option value="">Bypassed(CEM)</option>
+                          <option value="">Bypassed(Customer)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group"></div>
+                </form>
+                <div id="previewModal" class="modal">
+                  <div class="modal-content">
+                      <h4>SMS Preview</h4>
+                      <p id="previewContent"></p>
+                      <button onclick="downloadFile()">OK</button>
+                      <button onclick="closePreview()">Close</button>
+                  </div>
+              </div>              
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script> </script>
+</body>
+
+</html>
